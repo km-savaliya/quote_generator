@@ -1,25 +1,50 @@
-import logo from './logo.svg';
+import React,{ useEffect,useState } from 'react'
 import './App.css';
+import './Quote.css'
+import axios from 'axios'
 
-function App() {
+
+
+
+
+const App = ()=>{
+  
+  const [quote,setQuote] = useState("")
+  const [author,setAuthor] = useState("")
+
+  const quoteApi = async ()=>{
+    let quoteArray = []
+    try{
+      const data = await axios.get("https://api.quotable.io/random")
+     
+      quoteArray = data.data
+      console.log(quoteArray)
+    }catch(error){  
+      console.log(error)
+    }
+
+    try {
+      setQuote(quoteArray.content)
+      setAuthor(quoteArray.author)      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    quoteApi()
+  },[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="quotebox" >
+        <div className="quotecontainer">
+          <h5 className="author">{author}</h5>
+          <h3 className="quote">"{quote}"</h3>
+          <button className="quotebutton" onClick={quoteApi}>Another</button>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 
 export default App;
